@@ -37,7 +37,7 @@ class env():
                 typ = self.browser.find_element_by_xpath("/html/body/div[13]").text
                 numbers = [int(word) for word in typ.split() if word.isdigit()]
                 score=numbers[0]
-                reward=int(score)-int(self.score)#burayı iyi kontrol et!
+                reward=int(score)-int(self.score)
                 print(self.score,score)
                 self.score=score
                 done=0
