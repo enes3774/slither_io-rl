@@ -74,23 +74,24 @@ class env():
                     pass
         typ = self.browser.find_element_by_xpath('/html/body/div[2]/div[5]/div')
         oppacity=typ.value_of_css_property('opacity')
-        i=1
-        while (i==0):#bunu silebilirsin
+        
+        while (1):
           if oppacity=="0.38":
-              i=0
+              
               typ = self.browser.find_element_by_xpath('/html/body/div[2]/div[5]/div')
               oppacity=typ.value_of_css_property('opacity')
-        i=1
-        while (i==0):
+              break
+        
+        while (1):
           try:
            typ = self.browser.find_element_by_xpath("/html/body/div[13]").text
            
            
-           i=0
+           break
           except:
               pass
            
-        print("başlıyor")
+        
         time.sleep(1)
 
         self.browser.save_screenshot('screenie.png')
