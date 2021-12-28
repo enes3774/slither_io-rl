@@ -5,6 +5,6 @@
 - 📫 How to reach me ...
 
 <!---
-enes3774/enes3774 is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+enes3774/slither io is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 You can click the Preview link to take a look at your changes.
 --->
