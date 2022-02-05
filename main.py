@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
+
 import tensorflow as tf
 
 
@@ -18,21 +18,12 @@ import tensorflow.keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import  Conv2D,Flatten
 
-model = Sequential()
-        
-model.add(Conv2D(32, kernel_size=4, strides = (2,2), input_shape = (4,177,384),padding = "same"))
-model.add(Activation("relu"))
-model.add(Conv2D(64,kernel_size=4,strides=(2,2),padding="same"))
-model.add(Activation("relu"))
-model.add(Conv2D(64,kernel_size=3,strides=(1,1),padding="same"))
-model.add(Activation("relu"))
-model.add(Flatten())
 
 
 
 
 
-state_size = 2880
+state_size = (1,4,88,192)
 action_size =1
 scores = []
 
@@ -69,23 +60,24 @@ scores_deque = deque(maxlen=print_every)
 states_deque=deque(maxlen=4)
 scores = []
 def resizeİmg(img):
-    scale_percent = 20
+    scale_percent = 10
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     width = int(gray.shape[1] * scale_percent / 100)
     height = int(gray.shape[0] * scale_percent / 100)
     dim = (width, height)
-    
+    print(gray.shape[1], gray.shape[0])
       
     # resize image
     resized = cv2.resize(gray, dim, interpolation = cv2.INTER_AREA)
-    state=resized.reshape(177,384)
+    state=resized.reshape(88,192)
     
     return state
 for i_episode in range(1, n_episodes+1):
     time.sleep(4)
     agent.reset()
-    state = env.reset()
     states_deque=deque(maxlen=4)
+    state = env.reset()
+    
     
 
     state=resizeİmg(state)
@@ -100,7 +92,7 @@ for i_episode in range(1, n_episodes+1):
 
     while(True):
         t += 1
-        action = agent.act(model.predict(np.array(states_deque).reshape(1,4,177,384)).T)
+        action = agent.act(np.array(states_deque).reshape(1,4,88,192))
         print(action)
 
 
@@ -113,35 +105,27 @@ for i_episode in range(1, n_episodes+1):
         
 
         
-        agent.step(t, model.predict(np.array(states_deque).reshape(1,4,177,384)).T, action, reward, model.predict(np.array(next_states_deque).reshape(1,4,177,384)).T, done)
+        agent.step(t, np.array(states_deque).reshape(1,4,88,192), action, reward, np.array(next_states_deque).reshape(1,4,88,192), done)
         state = next_state
-        score += reward
+        
         states_deque=next_states_deque
-        warnings.filterwarnings("ignore", message="WARNING:tensorflow:Compiled the loaded model, but the compiled metrics have yet to be built.")
+       
         if done:
              print("bitti step:",t)
              break 
-    scores_deque.append(score)
-    scores.append(score)
-    print('\rEpisode {}\tAverage Score: {:.2f}'.format(i_episode, np.mean(scores_deque)), end="")
+   
+    print('\rEpisode {}'.format(i_episode), end="")
     if i_episode%100==0:
         agent.actor_local.model.save('checkpoint_actorcnn')
         agent.critic_local.model.save('checkpoint_criticcnn')
         print("kaydedildi")
-    if i_episode % print_every == 0:
-        print('\rEpisode {}\tAverage Score: {:.2f}'.format(i_episode, np.mean(scores_deque)))
+
             
         
 
 
+"""
 
-
-fig = plt.figure()
-ax = fig.add_subplot(111)
-plt.plot(np.arange(1, len(scores)+1), scores)
-plt.ylabel('Score')
-plt.xlabel('Episode #')
-plt.show()
 from tensorflow.keras.models import load_model
 
 trained_model = load_model('checkpoint_actor')
@@ -179,5 +163,5 @@ for i_episode in range(5):
             break
     
     print("Episode {0} finished after {1} timesteps. Total score: {2}".format(i_episode+1, t+1, score))
-            
+"""
 env.close()
